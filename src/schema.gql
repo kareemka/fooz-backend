@@ -1,0 +1,403 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Accessory {
+  id: ID!
+  image: String
+  name: String!
+  price: Float!
+}
+
+type Banner {
+  createdAt: DateTime!
+  id: ID!
+  image: String!
+  isActive: Boolean!
+  link: String
+  order: Int!
+  title: String
+  updatedAt: DateTime!
+}
+
+type Category {
+  id: ID!
+  image: String
+  name: String!
+  products: [Product!]
+  productsCount: Int!
+  slug: String!
+}
+
+type Color {
+  id: ID!
+  image: String
+  name: String!
+}
+
+type Coupon {
+  code: String!
+  createdAt: DateTime!
+  discountType: DiscountType!
+  discountValue: Float!
+  expiryDate: DateTime
+  id: ID!
+  isActive: Boolean!
+  minOrderAmount: Float
+  updatedAt: DateTime!
+}
+
+type CouponValidationResult {
+  discountAmount: Float
+  isValid: Boolean!
+  message: String
+}
+
+input CreateAccessoryInput {
+  image: String
+  name: String!
+  price: Float!
+}
+
+input CreateBannerInput {
+  image: String!
+  isActive: Boolean! = true
+  link: String
+  order: Int! = 0
+  title: String
+}
+
+input CreateCategoryInput {
+  image: String
+  name: String!
+  slug: String!
+}
+
+input CreateColorInput {
+  image: String
+  name: String!
+}
+
+input CreateCouponInput {
+  code: String!
+  discountType: DiscountType!
+  discountValue: Float!
+  expiryDate: DateTime
+  isActive: Boolean
+  minOrderAmount: Float
+}
+
+input CreateFaqInput {
+  answer: String!
+  isActive: Boolean! = true
+  order: Int! = 0
+  question: String!
+}
+
+input CreateOrderInput {
+  couponCode: String
+  customerName: String!
+  customerPhone: String!
+  items: [CreateOrderItemInput!]!
+  shippingAddress: String!
+  totalAmount: Float!
+}
+
+input CreateOrderItemAccessoryInput {
+  name: String!
+  price: Float!
+}
+
+input CreateOrderItemInput {
+  accessories: [CreateOrderItemAccessoryInput!]
+  colorName: String
+  price: Float!
+  productId: String!
+  quantity: Float!
+  sizeName: String
+}
+
+input CreateProductInput {
+  accessoryIds: [String!]
+  categoryId: String
+  colorIds: [String!]
+  description: String
+  discountPercentage: Float
+  galleryImages: [String!]! = []
+  glbFileUrl: String
+  isActive: Boolean! = true
+  mainImage: String!
+  name: String!
+  price: Float!
+  sizes: [ProductSizeInput!]
+  slug: String!
+  stock: Int!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+enum DiscountType {
+  FIXED
+  PERCENTAGE
+}
+
+type Faq {
+  answer: String!
+  createdAt: DateTime!
+  id: ID!
+  isActive: Boolean!
+  order: Int!
+  question: String!
+  updatedAt: DateTime!
+}
+
+type MonthlySales {
+  month: String!
+  orderCount: Float!
+  totalSales: Float!
+}
+
+type Mutation {
+  bulkDeleteAccessories(ids: [ID!]!): Boolean!
+  bulkDeleteBanners(ids: [ID!]!): Boolean!
+  bulkDeleteCategories(ids: [ID!]!): Boolean!
+  bulkDeleteColors(ids: [ID!]!): Boolean!
+  bulkDeleteFaqs(ids: [ID!]!): Boolean!
+  bulkDeleteProducts(ids: [ID!]!): Boolean!
+  createAccessory(createAccessoryInput: CreateAccessoryInput!): Accessory!
+  createBanner(input: CreateBannerInput!): Banner!
+  createCategory(input: CreateCategoryInput!): Category!
+  createColor(input: CreateColorInput!): Color!
+  createCoupon(input: CreateCouponInput!): Coupon!
+  createFaq(createFaqInput: CreateFaqInput!): Faq!
+  createOrder(input: CreateOrderInput!): Order!
+  createProduct(input: CreateProductInput!): Product!
+  deleteBanner(id: ID!): Boolean!
+  deleteCategory(id: ID!): Boolean!
+  deleteColor(id: ID!): Boolean!
+  deleteCoupon(id: ID!): Boolean!
+  deleteProduct(id: ID!): Boolean!
+  removeAccessory(id: String!): Accessory!
+  removeFaq(id: String!): Faq!
+  removeOrder(id: String!): Boolean!
+  updateAccessory(id: String!, updateAccessoryInput: CreateAccessoryInput!): Accessory!
+  updateBanner(id: ID!, input: UpdateBannerInput!): Banner!
+  updateCategory(id: ID!, input: UpdateCategoryInput!): Category!
+  updateColor(id: ID!, input: UpdateColorInput!): Color!
+  updateCoupon(id: ID!, input: UpdateCouponInput!): Coupon!
+  updateFaq(id: String!, updateFaqInput: UpdateFaqInput!): Faq!
+  updateOrderStatus(input: UpdateOrderStatusInput!): Order!
+  updateProduct(id: ID!, input: UpdateProductInput!): Product!
+}
+
+type Order {
+  couponCode: String
+  createdAt: DateTime!
+  customerName: String!
+  customerPhone: String!
+  discountAmount: Float!
+  id: ID!
+  items: [OrderItem!]!
+  orderNumber: String!
+  shippingAddress: String!
+  status: OrderStatus!
+  totalAmount: Float!
+  updatedAt: DateTime!
+}
+
+type OrderItem {
+  accessories: [OrderItemAccessory!]
+  colorImage: String
+  colorName: String
+  id: ID!
+  orderId: String!
+  price: Float!
+  product: Product
+  productId: String!
+  quantity: Float!
+  sizeDimensions: String
+  sizeName: String
+}
+
+type OrderItemAccessory {
+  id: ID!
+  image: String
+  name: String!
+  price: Float!
+}
+
+enum OrderStatus {
+  CANCELLED
+  DELIVERED
+  PENDING
+  PROCESSING
+  SHIPPED
+}
+
+type PaginatedAccessories {
+  items: [Accessory!]!
+  total: Int!
+}
+
+type PaginatedBanners {
+  items: [Banner!]!
+  total: Int!
+}
+
+type PaginatedCategories {
+  items: [Category!]!
+  total: Int!
+}
+
+type PaginatedColors {
+  items: [Color!]!
+  total: Int!
+}
+
+type PaginatedCoupons {
+  items: [Coupon!]!
+  total: Float!
+}
+
+type PaginatedFaqs {
+  items: [Faq!]!
+  total: Int!
+}
+
+type PaginatedOrders {
+  items: [Order!]!
+  total: Float!
+}
+
+type PaginatedProducts {
+  items: [Product!]!
+  total: Int!
+}
+
+type Product {
+  accessories: [Accessory!]!
+  category: Category
+  categoryId: String
+  colors: [Color!]!
+  createdAt: DateTime!
+  description: String
+  discountPercentage: Float
+  galleryImages: [String!]!
+  glbFileUrl: String
+  id: ID!
+  isActive: Boolean!
+  mainImage: String!
+  name: String!
+  price: Float!
+  sizes: [ProductSize!]!
+  slug: String!
+  stock: Int!
+  updatedAt: DateTime!
+}
+
+type ProductSize {
+  dimensions: String
+  id: ID
+  name: String!
+  price: Float!
+  productId: String
+}
+
+input ProductSizeInput {
+  dimensions: String
+  id: ID
+  name: String!
+  price: Float!
+  productId: String
+}
+
+enum ProductSort {
+  BEST_SELLING
+  LATEST
+  PRICE_HIGH_TO_LOW
+  PRICE_LOW_TO_HIGH
+}
+
+type Query {
+  accessories(search: String, skip: Int, take: Int): PaginatedAccessories!
+  accessory(id: String!): Accessory!
+  activeBanners: [Banner!]!
+  banner(id: ID!): Banner
+  banners(search: String, skip: Int, take: Int): PaginatedBanners!
+  categories(search: String, skip: Int, take: Int): PaginatedCategories!
+  categoryBySlug(slug: String!): Category
+  color(id: ID!): Color
+  colors(search: String, skip: Int, take: Int): PaginatedColors!
+  coupon(id: ID!): Coupon
+  coupons(search: String, skip: Int, take: Int): PaginatedCoupons!
+  faq(id: String!): Faq!
+  faqs(isActive: Boolean, search: String, skip: Int, take: Int): PaginatedFaqs!
+  monthlySales(months: Int = 6): [MonthlySales!]!
+  order(id: String!): Order!
+  orders(search: String, skip: Int, status: OrderStatus, take: Int): PaginatedOrders!
+  product(id: ID!): Product
+  productBySlug(slug: String!): Product
+  products(category: String, includeInactive: Boolean = false, search: String, skip: Int, sortBy: ProductSort, take: Int): PaginatedProducts!
+  validateCoupon(code: String!, subtotal: Float!): CouponValidationResult!
+}
+
+input UpdateBannerInput {
+  image: String
+  isActive: Boolean = true
+  link: String
+  order: Int = 0
+  title: String
+}
+
+input UpdateCategoryInput {
+  image: String
+  name: String
+  slug: String
+}
+
+input UpdateColorInput {
+  image: String
+  name: String
+}
+
+input UpdateCouponInput {
+  code: String
+  discountType: DiscountType
+  discountValue: Float
+  expiryDate: DateTime
+  isActive: Boolean
+  minOrderAmount: Float
+}
+
+input UpdateFaqInput {
+  answer: String
+  id: String!
+  isActive: Boolean = true
+  order: Int = 0
+  question: String
+}
+
+input UpdateOrderStatusInput {
+  id: String!
+  status: OrderStatus!
+}
+
+input UpdateProductInput {
+  accessoryIds: [String!]
+  categoryId: String
+  colorIds: [String!]
+  description: String
+  discountPercentage: Float
+  galleryImages: [String!] = []
+  glbFileUrl: String
+  isActive: Boolean = true
+  mainImage: String
+  name: String
+  price: Float
+  sizes: [ProductSizeInput!]
+  slug: String
+  stock: Int
+}
