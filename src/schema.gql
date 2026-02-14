@@ -110,19 +110,20 @@ input CreateOrderItemAccessoryInput {
 
 input CreateOrderItemInput {
   accessories: [CreateOrderItemAccessoryInput!]
-  colorName: String
+  edgeColorName: String
   price: Float!
   productId: String!
   quantity: Float!
   sizeName: String
+  surfaceColorName: String
 }
 
 input CreateProductInput {
   accessoryIds: [String!]
   categoryId: String
-  colorIds: [String!]
   description: String
   discountPercentage: Float
+  edgeColorIds: [String!]
   galleryImages: [String!]! = []
   glbFileUrl: String
   isActive: Boolean! = true
@@ -132,6 +133,7 @@ input CreateProductInput {
   sizes: [ProductSizeInput!]
   slug: String!
   stock: Int!
+  surfaceColorIds: [String!]
 }
 
 """
@@ -152,6 +154,21 @@ type Faq {
   order: Int!
   question: String!
   updatedAt: DateTime!
+}
+
+type Media {
+  createdAt: DateTime!
+  id: ID!
+  name: String!
+  path: String!
+  size: Int!
+  type: MediaType!
+  url: String!
+}
+
+enum MediaType {
+  GLB
+  IMAGE
 }
 
 type MonthlySales {
@@ -179,6 +196,8 @@ type Mutation {
   deleteCategory(id: ID!): Boolean!
   deleteColor(id: ID!): Boolean!
   deleteCoupon(id: ID!): Boolean!
+  deleteMedia(id: String!): Boolean!
+  deleteMultipleMedia(ids: [String!]!): Boolean!
   deleteProduct(id: ID!): Boolean!
   removeAccessory(id: String!): Accessory!
   removeFaq(id: String!): Faq!
@@ -210,8 +229,8 @@ type Order {
 
 type OrderItem {
   accessories: [OrderItemAccessory!]
-  colorImage: String
-  colorName: String
+  edgeColorImage: String
+  edgeColorName: String
   id: ID!
   orderId: String!
   price: Float!
@@ -220,6 +239,8 @@ type OrderItem {
   quantity: Float!
   sizeDimensions: String
   sizeName: String
+  surfaceColorImage: String
+  surfaceColorName: String
 }
 
 type OrderItemAccessory {
@@ -267,6 +288,11 @@ type PaginatedFaqs {
   total: Int!
 }
 
+type PaginatedMedia {
+  items: [Media!]!
+  total: Int!
+}
+
 type PaginatedOrders {
   items: [Order!]!
   total: Float!
@@ -281,10 +307,10 @@ type Product {
   accessories: [Accessory!]!
   category: Category
   categoryId: String
-  colors: [Color!]!
   createdAt: DateTime!
   description: String
   discountPercentage: Float
+  edgeColors: [Color!]!
   galleryImages: [String!]!
   glbFileUrl: String
   id: ID!
@@ -295,6 +321,7 @@ type Product {
   sizes: [ProductSize!]!
   slug: String!
   stock: Int!
+  surfaceColors: [Color!]!
   updatedAt: DateTime!
 }
 
@@ -335,6 +362,7 @@ type Query {
   coupons(search: String, skip: Int, take: Int): PaginatedCoupons!
   faq(id: String!): Faq!
   faqs(isActive: Boolean, search: String, skip: Int, take: Int): PaginatedFaqs!
+  mediaFiles(limit: Int! = 20, page: Int! = 1, type: MediaType): PaginatedMedia!
   monthlySales(months: Int = 6): [MonthlySales!]!
   order(id: String!): Order!
   orders(search: String, skip: Int, status: OrderStatus, take: Int): PaginatedOrders!
@@ -388,9 +416,9 @@ input UpdateOrderStatusInput {
 input UpdateProductInput {
   accessoryIds: [String!]
   categoryId: String
-  colorIds: [String!]
   description: String
   discountPercentage: Float
+  edgeColorIds: [String!]
   galleryImages: [String!] = []
   glbFileUrl: String
   isActive: Boolean = true
@@ -400,4 +428,5 @@ input UpdateProductInput {
   sizes: [ProductSizeInput!]
   slug: String
   stock: Int
+  surfaceColorIds: [String!]
 }

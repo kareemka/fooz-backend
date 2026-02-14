@@ -20,7 +20,8 @@ export class OrderService {
             const product = await this.prisma.product.findUnique({
                 where: { id: item.productId },
                 include: {
-                    colors: true,
+                    surfaceColors: true,
+                    edgeColors: true,
                     sizes: true,
                     accessories: true
                 }
@@ -53,11 +54,17 @@ export class OrderService {
                 ? basePrice * (1 - product.discountPercentage / 100)
                 : basePrice;
 
-            // Find selected color image
-            let colorImage = null;
-            if (item.colorName) {
-                const color = product.colors.find(c => c.name === item.colorName);
-                if (color) colorImage = color.image;
+            // Find selected color images
+            let surfaceColorImage = null;
+            if (item.surfaceColorName) {
+                const color = product.surfaceColors.find(c => c.name === item.surfaceColorName);
+                if (color) surfaceColorImage = color.image;
+            }
+
+            let edgeColorImage = null;
+            if (item.edgeColorName) {
+                const color = product.edgeColors.find(c => c.name === item.edgeColorName);
+                if (color) edgeColorImage = color.image;
             }
 
             // Find selected size dimensions
@@ -89,8 +96,10 @@ export class OrderService {
                 productId: item.productId,
                 quantity: item.quantity,
                 price: finalCalculatedPrice, // Forced server-side price
-                colorName: item.colorName,
-                colorImage: colorImage,
+                surfaceColorName: item.surfaceColorName,
+                surfaceColorImage: surfaceColorImage,
+                edgeColorName: item.edgeColorName,
+                edgeColorImage: edgeColorImage,
                 sizeName: item.sizeName,
                 sizeDimensions: sizeDimensions,
                 accessories: processedAccessories ? {

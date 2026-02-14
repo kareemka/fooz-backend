@@ -1,16 +1,52 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
+import { PrismaService } from '../prisma/prisma.service';
+import { MediaType } from '@prisma/client';
 import * as fs from 'fs';
 import * as path from 'path';
-import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class MediaService {
     private readonly uploadDir = path.join(process.cwd(), 'public', 'uploads');
 
-    constructor() {
+    constructor(private readonly prisma: PrismaService) {
         if (!fs.existsSync(this.uploadDir)) {
             fs.mkdirSync(this.uploadDir, { recursive: true });
         }
+    }
+
+    async saveFile(file: Express.Multer.File): Promise<any> {
+        // This is now just a helper that ensures DB record is created
+        // The disk storage is handled by Multer in the controller
+        const ext = path.extname(file.originalname).toLowerCase();
+        const type = ext === '.glb' ? MediaType.GLB : MediaType.IMAGE;
+        const url = await this.getFileUrl(file.filename);
+
+        return this.prisma.media.create({
+            data: {
+                name: file.originalname,
+                path: file.filename,
+                url,
+                type,
+                size: file.size,
+            },
+        });
+    }
+
+    // Explicitly named for clarity
+    async createRecord(file: { originalname: string, filename: string, size: number }): Promise<any> {
+        const ext = path.extname(file.originalname).toLowerCase();
+        const type = ext === '.glb' ? (MediaType.GLB as any) : (MediaType.IMAGE as any);
+        const url = await this.getFileUrl(file.filename);
+
+        return this.prisma.media.create({
+            data: {
+                name: file.originalname,
+                path: file.filename,
+                url,
+                type,
+                size: file.size,
+            },
+        });
     }
 
     async getFileUrl(filename: string): Promise<string> {
@@ -18,67 +54,23 @@ export class MediaService {
         return `${baseUrl}/public/uploads/${filename}`;
     }
 
-    async saveFile(file: Express.Multer.File): Promise<string> {
-        // This method is kept for backward compatibility if needed, 
-        // but the controller now uses diskStorage.
-        const allowedExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.glb'];
-        const ext = path.extname(file.originalname).toLowerCase();
-        const baseName = path.basename(file.originalname, ext);
+    async getAllFiles(type?: any, page: number = 1, limit: number = 20) {
+        const skip = (page - 1) * limit;
 
-        if (!allowedExtensions.includes(ext)) {
-            throw new BadRequestException(`File type ${ext} is not allowed.`);
-        }
-
-        let filename = `${baseName}${ext}`;
-        let filePath = path.join(this.uploadDir, filename);
-        let counter = 1;
-
-        while (fs.existsSync(filePath)) {
-            filename = `${baseName}_${counter}${ext}`;
-            filePath = path.join(this.uploadDir, filename);
-            counter++;
-        }
-
-        await fs.promises.writeFile(filePath, file.buffer);
-        return this.getFileUrl(filename);
-    }
-
-    async getAllFiles(type?: 'IMAGE' | 'GLB', page: number = 1, limit: number = 20) {
-        const allFiles = await fs.promises.readdir(this.uploadDir);
-        const baseUrl = process.env.APP_URL || 'http://localhost:3000';
-
-        // Filter by extension first to get correct count
-        const filteredFilenames = allFiles.filter(filename => {
-            const ext = path.extname(filename).toLowerCase();
-            const fileType = ['.glb'].includes(ext) ? 'GLB' : 'IMAGE';
-            return !type || fileType === type;
-        });
-
-        const total = filteredFilenames.length;
-        const startIndex = (page - 1) * limit;
-        const endIndex = page * limit;
-        const paginatedFilenames = filteredFilenames.reverse().slice(startIndex, endIndex);
-
-        const mediaFiles = await Promise.all(
-            paginatedFilenames.map(async (filename) => {
-                const filePath = path.join(this.uploadDir, filename);
-                const stats = await fs.promises.stat(filePath);
-                const ext = path.extname(filename).toLowerCase();
-                const fileType = ['.glb'].includes(ext) ? 'GLB' : 'IMAGE';
-
-                return {
-                    id: filename,
-                    url: `${baseUrl}/public/uploads/${filename}`,
-                    name: filename,
-                    type: fileType,
-                    size: stats.size,
-                    createdAt: stats.birthtime.toISOString(),
-                };
-            })
-        );
+        const [items, total] = await Promise.all([
+            this.prisma.media.findMany({
+                where: type ? { type } : {},
+                skip,
+                take: limit,
+                orderBy: { createdAt: 'desc' },
+            }),
+            this.prisma.media.count({
+                where: type ? { type } : {},
+            }),
+        ]);
 
         return {
-            items: mediaFiles,
+            items,
             meta: {
                 total,
                 page,
@@ -89,9 +81,20 @@ export class MediaService {
     }
 
     async deleteFile(id: string) {
-        const filePath = path.join(this.uploadDir, id);
-        if (fs.existsSync(filePath)) {
-            await fs.promises.unlink(filePath);
+        const media = await this.prisma.media.findUnique({
+            where: { id }
+        }) || await this.prisma.media.findFirst({
+            where: { path: id }
+        });
+
+        if (media) {
+            const filePath = path.join(this.uploadDir, media.path);
+            if (fs.existsSync(filePath)) {
+                await fs.promises.unlink(filePath);
+            }
+            await this.prisma.media.delete({
+                where: { id: media.id }
+            });
         }
     }
 

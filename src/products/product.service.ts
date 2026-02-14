@@ -50,7 +50,8 @@ export class ProductService {
                 where,
                 include: {
                     category: true,
-                    colors: true,
+                    surfaceColors: true,
+                    edgeColors: true,
                     sizes: true,
                     accessories: true,
                 },
@@ -69,7 +70,8 @@ export class ProductService {
             where: { slug },
             include: {
                 category: true,
-                colors: true,
+                surfaceColors: true,
+                edgeColors: true,
                 sizes: true,
                 accessories: true,
             },
@@ -81,7 +83,8 @@ export class ProductService {
             where: { id },
             include: {
                 category: true,
-                colors: true,
+                surfaceColors: true,
+                edgeColors: true,
                 sizes: true,
                 accessories: true,
             },
@@ -90,18 +93,20 @@ export class ProductService {
     }
 
     async create(data: any) {
-        const { categoryId, colorIds, sizes, accessoryIds, ...rest } = data;
+        const { categoryId, surfaceColorIds, edgeColorIds, sizes, accessoryIds, ...rest } = data;
         return this.prisma.product.create({
             data: {
                 ...rest,
                 category: categoryId ? { connect: { id: categoryId } } : undefined,
-                colors: colorIds ? { connect: colorIds.map((id: string) => ({ id })) } : undefined,
+                surfaceColors: surfaceColorIds ? { connect: surfaceColorIds.map((id: string) => ({ id })) } : undefined,
+                edgeColors: edgeColorIds ? { connect: edgeColorIds.map((id: string) => ({ id })) } : undefined,
                 sizes: sizes ? { create: sizes.map(({ id, productId, ...s }) => s) } : undefined,
                 accessories: accessoryIds ? { connect: accessoryIds.map((id: string) => ({ id })) } : undefined,
             },
             include: {
                 category: true,
-                colors: true,
+                surfaceColors: true,
+                edgeColors: true,
                 sizes: true,
                 accessories: true,
             },
@@ -109,7 +114,7 @@ export class ProductService {
     }
 
     async update(id: string, data: any) {
-        const { categoryId, colorIds, sizes, accessoryIds, ...rest } = data;
+        const { categoryId, surfaceColorIds, edgeColorIds, sizes, accessoryIds, ...rest } = data;
 
         // Perform main update
         await this.prisma.product.update({
@@ -117,7 +122,8 @@ export class ProductService {
             data: {
                 ...rest,
                 category: categoryId ? { connect: { id: categoryId } } : (categoryId === null ? { disconnect: true } : undefined),
-                colors: colorIds ? { set: colorIds.map((id: string) => ({ id })) } : undefined,
+                surfaceColors: surfaceColorIds ? { set: surfaceColorIds.map((id: string) => ({ id })) } : undefined,
+                edgeColors: edgeColorIds ? { set: edgeColorIds.map((id: string) => ({ id })) } : undefined,
                 accessories: accessoryIds ? { set: accessoryIds.map((id: string) => ({ id })) } : undefined,
             },
         });

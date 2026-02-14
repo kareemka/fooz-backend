@@ -27,9 +27,9 @@ async function bootstrap() {
     origin: [
       'https://admin.fooz-gaming.com',
       'https://fooz-gaming.com',
-      // 'http://localhost:3000',
-      // 'http://localhost:3001',
-      // 'http://localhost:3002',
+      'http://localhost:3000',
+      'http://localhost:3001',
+      'http://localhost:3002',
     ],
     credentials: true,
     methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],

@@ -1,4 +1,5 @@
 import { ObjectType, Field, ID, registerEnumType } from '@nestjs/graphql';
+import { IsOptional, IsString } from 'class-validator';
 import { Product } from '../../products/models/product.model';
 
 export enum OrderStatus {
@@ -49,10 +50,24 @@ export class OrderItem {
     price: number;
 
     @Field({ nullable: true })
-    colorName?: string;
+    @IsOptional()
+    @IsString()
+    surfaceColorName?: string;
 
     @Field({ nullable: true })
-    colorImage?: string;
+    @IsOptional()
+    @IsString()
+    surfaceColorImage?: string;
+
+    @Field({ nullable: true })
+    @IsOptional()
+    @IsString()
+    edgeColorName?: string;
+
+    @Field({ nullable: true })
+    @IsOptional()
+    @IsString()
+    edgeColorImage?: string;
 
     @Field({ nullable: true })
     sizeName?: string;

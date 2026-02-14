@@ -75,7 +75,10 @@ export class Product {
     glbFileUrl?: string;
 
     @Field(() => [Color])
-    colors: Color[];
+    surfaceColors: Color[];
+
+    @Field(() => [Color])
+    edgeColors: Color[];
 
     @Field(() => [ProductSize])
     sizes: ProductSize[];
@@ -156,7 +159,13 @@ export class CreateProductInput {
     @IsOptional()
     @IsArray()
     @IsString({ each: true })
-    colorIds?: string[];
+    surfaceColorIds?: string[];
+
+    @Field(() => [String], { nullable: true })
+    @IsOptional()
+    @IsArray()
+    @IsString({ each: true })
+    edgeColorIds?: string[];
 
     @Field(() => [ProductSize], { nullable: true })
     @IsOptional()

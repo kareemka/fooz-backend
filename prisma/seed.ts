@@ -69,7 +69,7 @@ async function main() {
             discountPercentage: 15,
             stock: 15,
 
-            colors: {
+            surfaceColors: {
                 create: [
                     {
                         name: 'نيون أرجواني',
@@ -81,6 +81,15 @@ async function main() {
                     },
                 ],
             },
+            edgeColors: {
+                create: [
+                    {
+                        name: 'أسود مطفي',
+                        image: 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=200',
+                    }
+                ]
+            },
+
 
             sizes: {
                 create: [
@@ -123,9 +132,14 @@ async function main() {
             price: 275000,
             stock: 8,
 
-            colors: {
+            surfaceColors: {
                 create: [
                     { name: 'أسود', image: 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=200' }
+                ]
+            },
+            edgeColors: {
+                create: [
+                    { name: 'كربون', image: 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=200' }
                 ]
             },
 
@@ -154,11 +168,16 @@ async function main() {
             discountPercentage: 10,
             stock: 20,
 
-            colors: {
+            surfaceColors: {
                 create: [
                     { name: 'رمادي', image: 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=200' },
                     { name: 'أسود', image: 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=200' },
                 ],
+            },
+            edgeColors: {
+                create: [
+                    { name: 'أسود', image: 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=200' }
+                ]
             },
 
             sizes: {
@@ -184,11 +203,16 @@ async function main() {
             discountPercentage: 20,
             stock: 30,
 
-            colors: {
+            surfaceColors: {
                 create: [
                     { name: 'أبيض', image: 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=200' },
                     { name: 'أسود', image: 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=200' },
                 ],
+            },
+            edgeColors: {
+                create: [
+                    { name: 'أسود', image: 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=200' }
+                ]
             },
 
             sizes: {
@@ -230,9 +254,14 @@ async function main() {
             price: 550000,
             stock: 5,
 
-            colors: {
+            surfaceColors: {
                 create: [
                     { name: 'خشبي داكن', image: 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=200' }
+                ]
+            },
+            edgeColors: {
+                create: [
+                    { name: 'أسود مطفي', image: 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=200' }
                 ]
             },
 

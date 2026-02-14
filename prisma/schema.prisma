@@ -36,7 +36,8 @@ model Product {
   updatedAt     DateTime           @updatedAt
   
   // Relations
-  colors        Color[]
+  surfaceColors Color[] @relation("SurfaceColors")
+  edgeColors    Color[] @relation("EdgeColors")
   sizes         ProductSize[]
   accessories   Accessory[]
   orderItems    OrderItem[]
@@ -60,10 +61,11 @@ model Accessory {
 }
 
 model Color {
-  id       String    @id @default(uuid())
-  name     String
-  image    String?
-  products Product[]
+  id             String    @id @default(uuid())
+  name           String
+  image          String?
+  surfaceProducts Product[] @relation("SurfaceColors")
+  edgeProducts    Product[] @relation("EdgeColors")
 }
 
 model Faq {
@@ -126,8 +128,10 @@ model OrderItem {
   price     Float   // Captures the price at the time of order
   
   // Optional: capture selected variants
-  colorName String?
-  colorImage String?
+  surfaceColorName String?
+  surfaceColorImage String?
+  edgeColorName String?
+  edgeColorImage String?
   sizeName  String?
   sizeDimensions String?
 
@@ -163,4 +167,18 @@ model Banner {
   isActive    Boolean  @default(true)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+}
+enum MediaType {
+  IMAGE
+  GLB
+}
+
+model Media {
+  id        String   @id @default(uuid())
+  url       String
+  name      String   // Original filename
+  path      String   // Actual filename on disk
+  type      MediaType
+  size      Int
+  createdAt DateTime @default(now())
 }

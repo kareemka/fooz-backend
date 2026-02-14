@@ -4,23 +4,32 @@ import { diskStorage } from 'multer';
 import { v4 as uuidv4 } from 'uuid';
 import { MediaService } from './media.service';
 import * as path from 'path';
+import * as fs from 'fs';
 import { DeleteMultipleMediaDto } from './dto/delete-multiple-media.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @Controller('media')
-@UseGuards(JwtAuthGuard)
 export class MediaController {
     constructor(private readonly mediaService: MediaService) { }
 
     @Post('upload')
+    @UseGuards(JwtAuthGuard)
     @UseInterceptors(FileInterceptor('file', {
         storage: diskStorage({
             destination: './public/uploads',
             filename: (req, file, cb) => {
                 const ext = path.extname(file.originalname).toLowerCase();
                 const baseName = path.basename(file.originalname, ext).replace(/\s+/g, '-');
-                const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-                cb(null, `${baseName}-${uniqueSuffix}${ext}`);
+                const uploadDir = path.join(process.cwd(), 'public', 'uploads');
+
+                let filename = `${baseName}${ext}`;
+                let counter = 1;
+
+                while (fs.existsSync(path.join(uploadDir, filename))) {
+                    filename = `${baseName}-${counter}${ext}`;
+                    counter++;
+                }
+                cb(null, filename);
             },
         }),
         limits: { fileSize: 200 * 1024 * 1024 }, // 200MB
@@ -30,16 +39,8 @@ export class MediaController {
             throw new BadRequestException('No file uploaded');
         }
 
-        const url = await this.mediaService.getFileUrl(file.filename);
-
-        return {
-            id: path.basename(url),
-            url,
-            name: file.originalname,
-            type: file.mimetype.includes('image') ? 'IMAGE' : 'GLB',
-            size: file.size,
-            createdAt: new Date().toISOString(),
-        };
+        // Now save the record in database
+        return this.mediaService.createRecord(file);
     }
 
     @Get()
@@ -56,12 +57,14 @@ export class MediaController {
     }
 
     @Post('delete-multiple')
+    @UseGuards(JwtAuthGuard)
     async deleteMultiple(@Body() deleteDto: DeleteMultipleMediaDto) {
         await this.mediaService.deleteMultipleFiles(deleteDto.ids);
         return { success: true };
     }
 
     @Delete(':id')
+    @UseGuards(JwtAuthGuard)
     async deleteFile(@Param('id') id: string) {
         await this.mediaService.deleteFile(id);
         return { success: true };

@@ -33,7 +33,12 @@ class CreateOrderItemInput {
     @Field({ nullable: true })
     @IsOptional()
     @IsString()
-    colorName?: string;
+    surfaceColorName?: string;
+
+    @Field({ nullable: true })
+    @IsOptional()
+    @IsString()
+    edgeColorName?: string;
 
     @Field({ nullable: true })
     @IsOptional()

@@ -10,6 +10,7 @@
     "db:push": "prisma db push",
     "db:seed": "prisma db seed",
     "db:admin": "ts-node src/seed-admin.ts",
+    "db:media": "ts-node prisma/sync-media.ts",
     "db:reset": "prisma migrate reset --force && prisma db seed",
     "db:studio": "prisma studio",
     "build": "nest build",
