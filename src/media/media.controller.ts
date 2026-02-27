@@ -32,7 +32,7 @@ export class MediaController {
         fileFilter: (_req, file, cb) => {
             const allowedExtensions = ['.jpg', '.jpeg', '.png', '.webp', '.gif', '.glb'];
             // tighter MIME types: do not allow generic application/octet-stream
-            const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'model/gltf-binary'];
+            const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'model/gltf-binary', 'application/octet-stream'];
             const ext = path.extname(file.originalname).toLowerCase();
 
             if (allowedExtensions.includes(ext) && allowedMimeTypes.includes(file.mimetype)) {

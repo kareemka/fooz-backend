@@ -57,6 +57,7 @@
     "uuid": "^13.0.0"
   },
   "devDependencies": {
+    "@nestjs/cli": "^11.0.16",
     "@types/bcrypt": "^6.0.0",
     "@types/multer": "^2.0.0",
     "@types/passport-jwt": "^4.0.1",
