@@ -28,14 +28,14 @@ import { NotificationsModule } from './notifications/notifications.module';
       sortSchema: true,
       playground: process.env.NODE_ENV !== 'production',
       introspection: process.env.NODE_ENV !== 'production',
-      context: ({ req, res }) => ({ req, res }),
+      context: ({ req, res }: { req: any; res: any }) => ({ req, res }),
     }),
     ServeStaticModule.forRoot({
       rootPath: join(process.cwd(), 'public'),
       serveRoot: '/public',
     }),
     ThrottlerModule.forRoot([{
-      ttl: 60000,
+      ttl: 60, // 1 minute
       limit: 100,
     }]),
     ProductsModule,

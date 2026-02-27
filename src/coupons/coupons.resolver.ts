@@ -38,7 +38,7 @@ export class CouponsResolver {
 
     @Query(() => CouponValidationResult, { name: 'validateCoupon' })
     @UseGuards(GqlThrottlerGuard)
-    @Throttle({ default: { limit: 5, ttl: 60000 } }) // منع brute-force لتخمين الكوبونات
+    @Throttle({ default: { limit: 5, ttl: 60 } }) // منع brute-force لتخمين الكوبونات
     validateCoupon(
         @Args('code') code: string,
         @Args('subtotal') subtotal: number,

@@ -38,6 +38,23 @@ export class MediaService {
         const type = ext === '.glb' ? (MediaType.GLB as any) : (MediaType.IMAGE as any);
         const url = await this.getFileUrl(file.filename);
 
+        // If GLB, validate file signature (magic bytes) to avoid accepting arbitrary binaries
+        if (ext === '.glb') {
+            const filePath = path.join(this.uploadDir, file.filename);
+            try {
+                const fd = await fs.promises.open(filePath, 'r');
+                const { buffer } = await fd.read(Buffer.alloc(4), 0, 4, 0);
+                await fd.close();
+                const magic = buffer.toString('ascii');
+                if (magic !== 'glTF') {
+                    throw new BadRequestException('Invalid GLB file signature');
+                }
+            } catch (err) {
+                if (err instanceof BadRequestException) throw err;
+                throw new BadRequestException('Failed to validate GLB file');
+            }
+        }
+
         return this.prisma.media.create({
             data: {
                 name: file.originalname,

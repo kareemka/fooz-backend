@@ -1,73 +1,225 @@
 <p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
+  <a href="https://fooz-gaming.com" target="blank"><img src="https://fooz-gaming.com/logo.png" width="200" alt="Fooz Gaming Logo" /></a>
 </p>
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+<h1 align="center">Fooz Gaming Backend API</h1>
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
+<p align="center">
+  Modern GraphQL API built with <a href="https://nestjs.com/" target="blank">NestJS</a>, 
+  <a href="https://www.apollographql.com/docs/apollo-server/" target="blank">Apollo Server</a>, 
+  and <a href="https://www.prisma.io/" target="blank">Prisma ORM</a>
 </p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
-## Description
+## 📋 Table of Contents
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+- [Features](#features)
+- [Prerequisites](#prerequisites)
+- [Installation](#installation)
+- [Configuration](#configuration)
+- [Running the Application](#running-the-application)
+- [Testing](#testing)
+- [Deployment](#deployment)
+- [Security](#security)
+- [Contributing](#contributing)
 
-## Installation
+## ✨ Features
+
+- **GraphQL API** - Built with Apollo Server for flexible data querying
+- **Type-Safe** - Full TypeScript support with strict type checking
+- **Database** - PostgreSQL with Prisma ORM and automatic migrations
+- **Authentication** - JWT-based auth with Passport.js
+- **Authorization** - Role-based access control (RBAC)
+- **Security** - Helmet, CORS, request validation, rate limiting
+- **File Uploads** - Multer integration for media management
+- **Error Handling** - Comprehensive error handling and logging
+- **Testing** - Jest unit and e2e testing setup
+- **Code Quality** - ESLint, Prettier, and TypeScript strict mode
+
+## 🔧 Prerequisites
+
+- **Node.js** >= 18.0.0
+- **npm** >= 9.0.0
+- **PostgreSQL** >= 12
+
+## 📦 Installation
 
 ```bash
-$ npm install
+# Clone the repository
+git clone https://github.com/fooz-gaming/backend.git
+cd backend
+
+# Install dependencies
+npm install
+
+# Generate Prisma Client
+npm run db:generate
+
+# Setup environment variables
+cp .env.example .env
+# Edit .env with your configuration
 ```
 
-## Running the app
+## ⚙️ Configuration
+
+Create a `.env` file based on `.env.example`:
+
+```env
+# Database
+DATABASE_URL=postgresql://user:password@localhost:5432/fooz_db?schema=public
+
+# API
+NODE_ENV=development
+PORT=3000
+APP_URL=http://localhost:3000
+
+# JWT
+JWT_SECRET=your-secret-key-here
+
+# Admin
+ADMIN_EMAIL=admin@fooz.com
+ADMIN_DEFAULT_PASSWORD=SecurePassword123!
+
+# Telegram (Optional)
+TELEGRAM_BOT_TOKEN=your-token
+GROUP_CHAT_ID=-1234567890
+```
+
+## 🚀 Running the Application
 
 ```bash
-# development
-$ npm run start
+# Development with watch mode
+npm run start:dev
 
-# watch mode
-$ npm run start:dev
+# Production
+npm run build
+npm run start:prod
 
-# production mode
-$ npm run start:prod
+# Prisma Studio (Database UI)
+npm run db:studio
 ```
 
-## Test
+## 🧪 Testing
 
 ```bash
-# unit tests
-$ npm run test
+# Unit tests
+npm run test
 
-# e2e tests
-$ npm run test:e2e
+# Watch mode
+npm run test:watch
 
-# test coverage
-$ npm run test:cov
+# Code coverage
+npm run test:cov
+
+# E2E tests
+npm run test:e2e
 ```
 
-## Support
+## 📝 Code Quality
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+```bash
+# Lint code
+npm run lint
 
-## Stay in touch
+# Fix linting issues
+npm run lint:fix
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+# Format code with Prettier
+npm run format
+```
 
-## License
+## 📚 Database Management
 
-Nest is [MIT licensed](LICENSE).
+```bash
+# Generate Prisma Client
+npm run db:generate
+
+# Push schema changes to database
+npm run db:push
+
+# Run database seed
+npm run db:seed
+
+# Add admin user
+npm run db:admin
+
+# Sync media files
+npm run db:media
+
+# Reset database (caution: deletes all data)
+npm run db:reset
+```
+
+## 🔒 Security
+
+This project implements industry-standard security practices:
+
+- **Helmet**: Secure HTTP headers
+- **CORS**: Configured for production domains
+- **Input Validation**: Global validation pipes with class-validator
+- **Rate Limiting**: Throttle decorator for API endpoints
+- **JWT Auth**: Secure token-based authentication
+- **Password Hashing**: Bcrypt with salt rounds
+- **HTTPS**: Enforced in production
+- **CSP**: Content Security Policy headers
+- **HSTS**: HTTP Strict Transport Security
+
+## 📛 Environment Variables
+
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `DATABASE_URL` | ✅ | PostgreSQL connection string |
+| `NODE_ENV` | ❌ | development or production |
+| `PORT` | ❌ | Server port (default: 3000) |
+| `APP_URL` | ❌ | Application URL |
+| `JWT_SECRET` | ✅ | Secret for JWT signing |
+| `ADMIN_EMAIL` | ❌ | Default admin email |
+| `ADMIN_DEFAULT_PASSWORD` | ❌ | Default admin password |
+| `TELEGRAM_BOT_TOKEN` | ❌ | Telegram bot token |
+| `GROUP_CHAT_ID` | ❌ | Telegram group chat ID |
+
+## 🏗️ Project Structure
+
+```
+src/
+├── auth/               # Authentication & Authorization
+├── accessories/        # Accessories module
+├── banners/           # Banners management
+├── categories/        # Product categories
+├── colors/            # Color management
+├── coupons/           # Discount coupons
+├── faq/               # FAQ module
+├── media/             # File upload & media
+├── notifications/     # Telegram notifications
+├── order/             # Orders management
+├── prisma/            # Database service
+├── products/          # Products module
+├── app.module.ts      # Root module
+└── main.ts            # Entry point
+```
+
+## 📖 Documentation
+
+- [NestJS Docs](https://docs.nestjs.com)
+- [Apollo Server Docs](https://www.apollographql.com/docs/apollo-server)
+- [Prisma Docs](https://www.prisma.io/docs)
+- [GraphQL Best Practices](https://graphql.org/learn)
+
+## 🤝 Contributing
+
+1. Create a feature branch (`git checkout -b feature/amazing-feature`)
+2. Commit your changes (`git commit -m 'Add amazing feature'`)
+3. Push to the branch (`git push origin feature/amazing-feature`)
+4. Open a Pull Request
+
+## 📄 License
+
+This project is private and licensed under UNLICENSED.
+
+## 👥 Support
+
+For support, email support@fooz-gaming.com or open an issue on GitHub.
+
+---
+
+Made with ❤️ by Fooz Gaming Team
+

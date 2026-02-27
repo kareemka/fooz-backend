@@ -1,69 +1,69 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-generator client {
-  provider = "prisma-client-js"
-}
-
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
+generator client {
+  provider = "prisma-client-js"
+}
+
 model Category {
-  id      String    @id @default(uuid())
-  slug    String    @unique
-  name    String
-  image   String?
+  id       String    @id @default(uuid())
+  slug     String    @unique
+  name     String
+  image    String?
   products Product[]
 }
 
 model Product {
-  id            String             @id @default(uuid())
-  slug          String             @unique
-  name          String
-  description   String?
-  price         Float              @default(0)
+  id                 String    @id @default(uuid())
+  slug               String    @unique
+  name               String
+  description        String?
+  price              Float     @default(0)
   discountPercentage Float? // 0-100 percentage discount
-  stock         Int                @default(0)
-  isActive      Boolean            @default(true)
-  categoryId    String?
-  category      Category?          @relation(fields: [categoryId], references: [id])
-  mainImage     String
-  galleryImages String[]
-  glbFileUrl    String?            // URL for 3D/AR model
-  createdAt     DateTime           @default(now())
-  updatedAt     DateTime           @updatedAt
-  
+  stock              Int       @default(0)
+  isActive           Boolean   @default(true)
+  categoryId         String?
+  category           Category? @relation(fields: [categoryId], references: [id])
+  mainImage          String
+  galleryImages      String[]
+  glbFileUrl         String? // URL for 3D/AR model
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+
   // Relations
-  surfaceColors Color[] @relation("SurfaceColors")
-  edgeColors    Color[] @relation("EdgeColors")
+  surfaceColors Color[]       @relation("SurfaceColors")
+  edgeColors    Color[]       @relation("EdgeColors")
   sizes         ProductSize[]
   accessories   Accessory[]
   orderItems    OrderItem[]
 }
 
 model ProductSize {
-  id         String   @id @default(uuid())
+  id         String  @id @default(uuid())
   name       String
   dimensions String?
   price      Float
   productId  String
-  product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  product    Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 }
 
 model Accessory {
-  id        String    @id @default(uuid())
-  name      String
-  price     Float
-  image     String?
-  products  Product[]
+  id       String    @id @default(uuid())
+  name     String
+  price    Float
+  image    String?
+  products Product[]
 }
 
 model Color {
-  id             String    @id @default(uuid())
-  name           String
-  image          String?
+  id              String    @id @default(uuid())
+  name            String
+  image           String?
   surfaceProducts Product[] @relation("SurfaceColors")
   edgeProducts    Product[] @relation("EdgeColors")
 }
@@ -92,15 +92,15 @@ enum DiscountType {
 }
 
 model Coupon {
-  id              String       @id @default(uuid())
-  code            String       @unique
-  discountType    DiscountType
-  discountValue   Float
-  expiryDate      DateTime?
-  minOrderAmount  Float?
-  isActive        Boolean      @default(true)
-  createdAt       DateTime     @default(now())
-  updatedAt       DateTime     @updatedAt
+  id             String       @id @default(uuid())
+  code           String       @unique
+  discountType   DiscountType
+  discountValue  Float
+  expiryDate     DateTime?
+  minOrderAmount Float?
+  isActive       Boolean      @default(true)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
 }
 
 model Order {
@@ -125,15 +125,15 @@ model OrderItem {
   productId String
   product   Product @relation(fields: [productId], references: [id])
   quantity  Int
-  price     Float   // Captures the price at the time of order
-  
+  price     Float // Captures the price at the time of order
+
   // Optional: capture selected variants
-  surfaceColorName String?
+  surfaceColorName  String?
   surfaceColorImage String?
-  edgeColorName String?
-  edgeColorImage String?
-  sizeName  String?
-  sizeDimensions String?
+  edgeColorName     String?
+  edgeColorImage    String?
+  sizeName          String?
+  sizeDimensions    String?
 
   // Accessories
   accessories OrderItemAccessory[]
@@ -159,26 +159,27 @@ model User {
 }
 
 model Banner {
-  id          String   @id @default(uuid())
-  title       String?
-  image       String
-  link        String?
-  order       Int      @default(0)
-  isActive    Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id        String   @id @default(uuid())
+  title     String?
+  image     String
+  link      String?
+  order     Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
+
 enum MediaType {
   IMAGE
   GLB
 }
 
 model Media {
-  id        String   @id @default(uuid())
+  id        String    @id @default(uuid())
   url       String
-  name      String   // Original filename
-  path      String   // Actual filename on disk
+  name      String // Original filename
+  path      String // Actual filename on disk
   type      MediaType
   size      Int
-  createdAt DateTime @default(now())
+  createdAt DateTime  @default(now())
 }

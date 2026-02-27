@@ -55,7 +55,7 @@ export class OrderService {
             // Apply discount if exists
             const hasDiscount = !!(product.discountPercentage && product.discountPercentage > 0);
             const finalBasePrice = hasDiscount
-                ? basePrice * (1 - product.discountPercentage / 100)
+                ? basePrice * (1 - (product.discountPercentage ?? 0) / 100)
                 : basePrice;
 
             // Find selected color images
@@ -264,7 +264,6 @@ export class OrderService {
             const date = new Date();
             date.setMonth(date.getMonth() - i);
             const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
-            const monthName = monthNames[date.getMonth()];
             monthlySalesMap.set(monthKey, { totalSales: 0, orderCount: 0 });
         }
 
@@ -283,7 +282,7 @@ export class OrderService {
         // Convert to array and sort by date
         const result = Array.from(monthlySalesMap.entries())
             .map(([key, data]) => {
-                const [year, month] = key.split('-').map(Number);
+                const [, month] = key.split('-').map(Number);
                 return {
                     month: monthNames[month - 1],
                     totalSales: data.totalSales,

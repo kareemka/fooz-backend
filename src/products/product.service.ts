@@ -100,7 +100,7 @@ export class ProductService {
                 category: categoryId ? { connect: { id: categoryId } } : undefined,
                 surfaceColors: surfaceColorIds ? { connect: surfaceColorIds.map((id: string) => ({ id })) } : undefined,
                 edgeColors: edgeColorIds ? { connect: edgeColorIds.map((id: string) => ({ id })) } : undefined,
-                sizes: sizes ? { create: sizes.map(({ id, productId, ...s }) => s) } : undefined,
+                sizes: sizes ? { create: sizes.map(({ id, productId, ...s }: { id: string; productId: string }) => s) } : undefined,
                 accessories: accessoryIds ? { connect: accessoryIds.map((id: string) => ({ id })) } : undefined,
             },
             include: {

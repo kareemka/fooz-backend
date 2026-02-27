@@ -2,9 +2,9 @@ import { Controller, Post, Get, Query, UseInterceptors, UploadedFile, BadRequest
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { v4 as uuidv4 } from 'uuid';
+// type definitions for uuid are provided by @types/uuid (already installed)
 import { MediaService } from './media.service';
 import * as path from 'path';
-import * as fs from 'fs';
 import { DeleteMultipleMediaDto } from './dto/delete-multiple-media.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RolesGuard } from '../auth/roles.guard';
@@ -20,18 +20,19 @@ export class MediaController {
     @UseInterceptors(FileInterceptor('file', {
         storage: diskStorage({
             destination: './public/uploads',
-            filename: (req, file, cb) => {
+            filename: (_req, file, cb) => {
                 const ext = path.extname(file.originalname).toLowerCase();
                 const baseName = uuidv4(); // Use UUID for filename to prevent original filename based attacks
-                const uploadDir = path.join(process.cwd(), 'public', 'uploads');
+                // const uploadDir = path.join(process.cwd(), 'public', 'uploads');
 
                 let filename = `${baseName}${ext}`;
                 cb(null, filename);
             },
         }),
-        fileFilter: (req, file, cb) => {
+        fileFilter: (_req, file, cb) => {
             const allowedExtensions = ['.jpg', '.jpeg', '.png', '.webp', '.gif', '.glb'];
-            const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'application/octet-stream', 'model/gltf-binary'];
+            // tighter MIME types: do not allow generic application/octet-stream
+            const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'model/gltf-binary'];
             const ext = path.extname(file.originalname).toLowerCase();
 
             if (allowedExtensions.includes(ext) && allowedMimeTypes.includes(file.mimetype)) {

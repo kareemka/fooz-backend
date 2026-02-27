@@ -1,4 +1,4 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateCouponInput, UpdateCouponInput, CouponValidationResult } from './models/coupon.model';
 import { DiscountType } from '@prisma/client';

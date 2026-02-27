@@ -17,7 +17,7 @@ export class OrderResolver {
 
     @Mutation(() => Order)
     @UseGuards(GqlThrottlerGuard)
-    @Throttle({ default: { limit: 2, ttl: 60000 } }) // Limit to 2 orders per minute per IP
+    @Throttle({ default: { limit: 2, ttl: 60 } }) // Limit to 2 orders per minute per IP
     createOrder(@Args('input') createOrderInput: CreateOrderInput) {
         return this.orderService.create(createOrderInput);
     }
