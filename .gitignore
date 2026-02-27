@@ -1,0 +1,40 @@
+# dependencies
+node_modules/
+/.pnp
+.pnp.*
+
+# build output
+dist/
+build/
+/coverage
+
+# Environment variables
+.env
+.env.*
+.env.local
+.env.production
+.env.staging
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# archives
+*.rar
+*.zip
+*.tar.gz
+
+# IDE
+.history/
+.vscode/
+.idea/
+
+# lock files
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
