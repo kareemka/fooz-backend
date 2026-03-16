@@ -50,5 +50,7 @@ Thumbs.db
 # History extension VSCode
 .history/
 
+# public uploads (can be large)
+public/uploads/
 
 README.md
