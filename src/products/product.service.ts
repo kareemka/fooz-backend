@@ -141,6 +141,11 @@ export class ProductService {
     async update(id: string, data: any) {
         const { categoryId, surfaceColorIds, edgeColorIds, sizes, accessoryIds, ...rest } = data;
 
+        // If the slug is malformed (starts with dashes) or missing, regenerate it
+        if (rest.slug && rest.slug.startsWith('-')) {
+            rest.slug = generateSlug(rest.name || rest.slug);
+        }
+
         // Perform main update
         await this.prisma.product.update({
             where: { id },
