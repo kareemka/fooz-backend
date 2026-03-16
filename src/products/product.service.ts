@@ -1,6 +1,26 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 
+// ── Slug Helper ───────────────────────────────────────────────────────────────
+function generateSlug(name: string): string {
+    // Keep Arabic letters, English letters, and numbers
+    // Arabic range: \u0600-\u06FF
+    let slug = name.toLowerCase()
+        .replace(/[^\u0600-\u06FFa-z0-9\s-]/g, '') // Remove special characters but keep Arabic
+        .trim()
+        .replace(/\s+/g, '-')                      // Replace spaces with single dash
+        .replace(/-+/g, '-');                     // Collapse multiple dashes
+
+    // If slug is empty (only special chars were provided), use fallback
+    if (!slug || slug === '-') {
+        slug = 'product';
+    }
+
+    // Add a short random suffix for uniqueness
+    const suffix = Math.random().toString(36).substring(2, 7);
+    return `${slug}-${suffix}`;
+}
+
 @Injectable()
 export class ProductService {
     constructor(private prisma: PrismaService) { }
@@ -94,9 +114,14 @@ export class ProductService {
 
     async create(data: any) {
         const { categoryId, surfaceColorIds, edgeColorIds, sizes, accessoryIds, ...rest } = data;
+
+        // Auto-generate a clean slug from the product name (ignore client-provided slug)
+        const slug = generateSlug(rest.name || rest.slug || 'product');
+        
         return this.prisma.product.create({
             data: {
                 ...rest,
+                slug, // Use the generated slug
                 category: categoryId ? { connect: { id: categoryId } } : undefined,
                 surfaceColors: surfaceColorIds ? { connect: surfaceColorIds.map((id: string) => ({ id })) } : undefined,
                 edgeColors: edgeColorIds ? { connect: edgeColorIds.map((id: string) => ({ id })) } : undefined,
