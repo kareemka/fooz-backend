@@ -9,6 +9,7 @@ import { DeleteMultipleMediaDto } from './dto/delete-multiple-media.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RolesGuard } from '../auth/roles.guard';
 import { Roles } from '../auth/roles.decorator';
+import sharp from 'sharp';
 
 @Controller('media')
 export class MediaController {
@@ -46,6 +47,26 @@ export class MediaController {
     async uploadFile(@UploadedFile() file: Express.Multer.File) {
         if (!file) {
             throw new BadRequestException('No file uploaded');
+        }
+
+        // Generate optimized OG Image for SEO if it's an image (not GLB)
+        const ext = path.extname(file.originalname).toLowerCase();
+        if (ext !== '.glb') {
+            try {
+                // Get the base filename without extension
+                const parsedPath = path.parse(file.filename);
+                // Create the new -og.jpg filename matching user request
+                const ogFilename = `${parsedPath.name}-og.jpg`;
+                const ogFilePath = path.join('./public/uploads', ogFilename);
+
+                // Use sharp to create a 1200x630 SEO-friendly image as requested by user
+                await sharp(file.path)
+                  .resize(1200, 630)
+                  .jpeg({ quality: 80 })
+                  .toFile(ogFilePath);
+            } catch (err) {
+                console.error('Error generating OG image:', err);
+            }
         }
 
         // Now save the record in database
