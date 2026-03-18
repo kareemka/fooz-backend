@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
-const sharp = require('sharp');
+import sharp from 'sharp';
 
 async function processOldImages() {
     const uploadsDir = path.join(__dirname, 'public', 'uploads');

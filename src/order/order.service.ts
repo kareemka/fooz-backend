@@ -78,6 +78,11 @@ export class OrderService {
                 if (size) sizeDimensions = size.dimensions;
             }
 
+            // Detect if this is a bundle (contains "حزم" anywhere in name)
+            const isBundle = product.name.toLocaleLowerCase().includes('حزم') || 
+                             product.name.toLocaleLowerCase().includes('bundle') ||
+                             product.name.toLocaleLowerCase().includes('package');
+
             // Process accessories and validate their prices
             let totalAccessoriesPrice = 0;
             const processedAccessories = item.accessories ? item.accessories.map(acc => {
@@ -85,10 +90,14 @@ export class OrderService {
                 if (!dbAccessory) {
                     throw new Error(`Accessory ${acc.name} not found for product ${product.name}`);
                 }
-                totalAccessoriesPrice += dbAccessory.price;
+                
+                // If it's a bundle, the accessory price is 0 for this order
+                const accessoryPrice = isBundle ? 0 : dbAccessory.price;
+                totalAccessoriesPrice += accessoryPrice;
+
                 return {
                     name: dbAccessory.name,
-                    price: dbAccessory.price,
+                    price: accessoryPrice,
                     image: dbAccessory.image
                 };
             }) : undefined;
