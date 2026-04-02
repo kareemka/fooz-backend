@@ -24,7 +24,8 @@ export class ProductResolver {
 
     @Query(() => Product, { name: 'productBySlug', nullable: true })
     async getProductBySlug(@Args('slug') slug: string) {
-        return this.productService.findBySlug(slug);
+        const decodedSlug = decodeURIComponent(slug);
+        return this.productService.findBySlug(decodedSlug);
     }
 
     @Query(() => Product, { name: 'product', nullable: true })
